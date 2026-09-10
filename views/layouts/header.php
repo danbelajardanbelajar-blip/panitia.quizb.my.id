@@ -91,10 +91,6 @@
 </head>
 <body>
 
-<button class="btn btn-dark d-md-none m-3 position-fixed top-0 start-0 z-3" id="sidebarToggle" style="z-index: 1050;">
-    <i class="bi bi-list"></i>
-</button>
-
 <div class="sidebar" id="sidebar">
     <a href="dashboard.php" class="sidebar-brand">Admin Panitia</a>
     <ul class="nav flex-column">
@@ -137,8 +133,15 @@
 </div>
 
 <div class="main-content">
-    <div class="top-nav">
-        <div class="d-md-none"></div>
+    <div class="top-nav d-flex justify-content-between align-items-center">
+        <!-- Tombol Menu Mobile -->
+        <button class="btn btn-outline-dark d-md-none" id="sidebarToggle">
+            <i class="bi bi-list"></i>
+        </button>
+        
+        <!-- Spacer untuk Desktop agar profile tetap di kanan -->
+        <div class="d-none d-md-block"></div>
+
         <div class="dropdown user-profile">
             <a class="text-decoration-none text-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="<?= htmlspecialchars(getCurrentUser()['avatar'] ?? 'https://ui-avatars.com/api/?name='.urlencode(getCurrentUser()['name'])) ?>" alt="User Avatar">
