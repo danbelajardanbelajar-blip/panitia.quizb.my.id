@@ -11,12 +11,16 @@ if (isLoggedIn()) {
 
 $clientId = $_ENV['GOOGLE_CLIENT_ID'] ?? '';
 $clientSecret = $_ENV['GOOGLE_CLIENT_SECRET'] ?? '';
-$redirectUri = rtrim($_ENV['APP_URL'] ?? 'http://localhost/panitia', '/') . '/login.php';
+
+// Gunakan host dinamis agar tidak terjadi masalah antara www dan non-www yang menghilangkan session
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+$host = $_SERVER['HTTP_HOST'];
+$redirectUri = $protocol . $host . '/login.php';
 
 // Handle Google OAuth Callback
 if (isset($_GET['code'])) {
-    if (isset($_GET['state']) && $_GET['state'] !== $_SESSION['oauth_state']) {
-        die('Invalid state parameter.');
+    if (isset($_GET['state']) && $_GET['state'] !== ($_SESSION['oauth_state'] ?? '')) {
+        die('Invalid state parameter. Hal ini biasanya terjadi jika Anda membuka web menggunakan "www" namun URL redirect Google tidak menggunakan "www" (atau sebaliknya) sehingga sesi terputus. Silakan kembali ke halaman utama dan login ulang tanpa mengetik www.');
     }
 
     $code = $_GET['code'];
