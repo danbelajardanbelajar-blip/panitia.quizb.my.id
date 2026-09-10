@@ -1,23 +1,42 @@
-</div> <!-- End main-content -->
+    </main> <!-- end content-wrapper -->
+</div> <!-- end main-content -->
 
+<!-- Bootstrap Bundle JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
 <script>
+    // Inisialisasi Icons
+    lucide.createIcons();
+
+    // Sidebar Mobile Toggle Logic
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
     
-    // Toggle sidebar
-    sidebarToggle.addEventListener('click', function(e) {
+    function toggleSidebar() {
         sidebar.classList.toggle('show');
-        e.stopPropagation();
-    });
+        sidebarOverlay.classList.toggle('show');
+    }
 
-    // Tutup sidebar jika user mengklik area di luar sidebar
-    document.addEventListener('click', function(e) {
-        if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
-            if (!sidebar.contains(e.target)) {
-                sidebar.classList.remove('show');
-            }
-        }
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleSidebar();
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function() {
+            toggleSidebar();
+        });
+    }
+
+    // Animation: form focus rings and inputs
+    const inputs = document.querySelectorAll('.form-control-modern, .form-select-modern');
+    inputs.forEach(input => {
+        // Just empty listener for now to trigger CSS animations if needed
     });
 </script>
 </body>

@@ -1,54 +1,64 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><?= $kegiatan ? 'Edit' : 'Tambah' ?> Kegiatan</h2>
-    <a href="kegiatan.php" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Kembali</a>
+    <div>
+        <h2 class="mb-1" style="font-weight: 800;"><?= $kegiatan ? 'Edit' : 'Tambah' ?> Kegiatan</h2>
+        <p class="text-muted-modern mb-0">Isi formulir di bawah untuk mengatur kegiatan panitia.</p>
+    </div>
+    <a href="kegiatan.php" class="btn-modern btn-secondary-modern">
+        <i data-lucide="arrow-left"></i> Kembali
+    </a>
 </div>
 
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
+<div class="card-modern">
+    <div class="card-header-modern">
+        Informasi Kegiatan
+    </div>
+    <div class="card-body-modern">
         <form method="POST" action="kegiatan.php?action=<?= $kegiatan ? 'edit&id='.$kegiatan['id'] : 'create' ?>">
             <?= csrfField() ?>
             
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
-                    <input type="text" name="nama_kegiatan" class="form-control" required value="<?= htmlspecialchars($kegiatan['nama_kegiatan'] ?? '') ?>">
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <label class="form-label-modern">Nama Kegiatan <span class="text-danger">*</span></label>
+                    <input type="text" name="nama_kegiatan" class="form-control-modern" placeholder="Misal: Seminar Nasional Teknologi 2026" required value="<?= htmlspecialchars($kegiatan['nama_kegiatan'] ?? '') ?>">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Tema</label>
-                    <input type="text" name="tema" class="form-control" value="<?= htmlspecialchars($kegiatan['tema'] ?? '') ?>">
+                    <label class="form-label-modern">Tema <span class="text-muted fw-normal fs-6">(Opsional)</span></label>
+                    <input type="text" name="tema" class="form-control-modern" placeholder="Tema besar kegiatan" value="<?= htmlspecialchars($kegiatan['tema'] ?? '') ?>">
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Deskripsi</label>
-                <textarea name="deskripsi" class="form-control" rows="3"><?= htmlspecialchars($kegiatan['deskripsi'] ?? '') ?></textarea>
+            <div class="mb-4">
+                <label class="form-label-modern">Deskripsi Singkat <span class="text-muted fw-normal fs-6">(Opsional)</span></label>
+                <textarea name="deskripsi" class="form-control-modern" rows="3" placeholder="Jelaskan tujuan atau deskripsi singkat kegiatan ini..."><?= htmlspecialchars($kegiatan['deskripsi'] ?? '') ?></textarea>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
-                    <input type="date" name="tanggal_mulai" class="form-control" required value="<?= htmlspecialchars($kegiatan['tanggal_mulai'] ?? '') ?>">
+            <hr class="mb-4" style="border-color: var(--border);">
+
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <label class="form-label-modern">Tanggal Mulai <span class="text-danger">*</span></label>
+                    <input type="date" name="tanggal_mulai" class="form-control-modern" required value="<?= htmlspecialchars($kegiatan['tanggal_mulai'] ?? '') ?>">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
-                    <input type="date" name="tanggal_selesai" class="form-control" required value="<?= htmlspecialchars($kegiatan['tanggal_selesai'] ?? '') ?>">
+                    <label class="form-label-modern">Tanggal Selesai <span class="text-danger">*</span></label>
+                    <input type="date" name="tanggal_selesai" class="form-control-modern" required value="<?= htmlspecialchars($kegiatan['tanggal_selesai'] ?? '') ?>">
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">Lokasi</label>
-                    <input type="text" name="lokasi" class="form-control" value="<?= htmlspecialchars($kegiatan['lokasi'] ?? '') ?>">
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label class="form-label-modern">Lokasi</label>
+                    <input type="text" name="lokasi" class="form-control-modern" placeholder="Misal: Gedung Serbaguna" value="<?= htmlspecialchars($kegiatan['lokasi'] ?? '') ?>">
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label class="form-label-modern">Penanggung Jawab</label>
+                    <input type="text" name="penanggung_jawab" class="form-control-modern" placeholder="Nama ketua pelaksana" value="<?= htmlspecialchars($kegiatan['penanggung_jawab'] ?? '') ?>">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Penanggung Jawab</label>
-                    <input type="text" name="penanggung_jawab" class="form-control" value="<?= htmlspecialchars($kegiatan['penanggung_jawab'] ?? '') ?>">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Status <span class="text-danger">*</span></label>
-                    <select name="status" class="form-select" required>
+                    <label class="form-label-modern">Status <span class="text-danger">*</span></label>
+                    <select name="status" class="form-select-modern" required>
                         <?php
                         $statuses = ['Draft', 'Persiapan', 'Berlangsung', 'Selesai', 'Diarsipkan'];
                         $currentStatus = $kegiatan['status'] ?? 'Draft';
@@ -61,12 +71,17 @@
                 </div>
             </div>
 
-            <div class="mb-4">
-                <label class="form-label">Catatan Tambahan</label>
-                <textarea name="catatan" class="form-control" rows="2"><?= htmlspecialchars($kegiatan['catatan'] ?? '') ?></textarea>
+            <div class="mb-5">
+                <label class="form-label-modern">Catatan Internal <span class="text-muted fw-normal fs-6">(Opsional)</span></label>
+                <textarea name="catatan" class="form-control-modern" rows="2" placeholder="Catatan tambahan untuk panitia inti..."><?= htmlspecialchars($kegiatan['catatan'] ?? '') ?></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan Data</button>
+            <div class="d-flex justify-content-end gap-3 pt-3 border-top" style="border-color: var(--border) !important;">
+                <a href="kegiatan.php" class="btn-modern btn-secondary-modern">Batal</a>
+                <button type="submit" class="btn-modern btn-primary-modern">
+                    <i data-lucide="save"></i> Simpan Data Kegiatan
+                </button>
+            </div>
         </form>
     </div>
 </div>
