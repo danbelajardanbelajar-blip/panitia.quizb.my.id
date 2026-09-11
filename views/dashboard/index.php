@@ -31,7 +31,7 @@
             <div class="card-body-modern">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
-                        <p class="mb-1 text-muted-modern" style="font-size: 0.9rem;">Total Anggaran (RAB)</p>
+                        <p class="mb-1 text-muted-modern" style="font-size: 0.9rem;">Total Rencana Belanja</p>
                         <h4 class="mb-0 fw-bold text-main"><?= formatRupiah($totalRab) ?></h4>
                     </div>
                     <div style="background: var(--info-bg); padding: 10px; border-radius: 12px;">
@@ -160,8 +160,8 @@
                             <i data-lucide="file-spreadsheet" style="color: var(--warning);"></i>
                         </div>
                         <div class="text-start">
-                            <div class="fw-bold">Susun RAB</div>
-                            <small class="text-muted-modern fw-normal">Rencanakan anggaran biaya</small>
+                            <div class="fw-bold">Susun RAPB</div>
+                            <small class="text-muted-modern fw-normal">Rencana anggaran pendapatan & belanja</small>
                         </div>
                     </a>
                     

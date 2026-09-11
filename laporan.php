@@ -19,11 +19,13 @@ if ($action === 'detail') {
         die("Kegiatan tidak ditemukan atau Anda tidak memiliki akses.");
     }
 
-    // Get Data
+    // Get Data RAPB
     $rabList = Rab::getAll($userId, $id);
-    $totalRab = 0;
+    $totalTargetPendapatan = 0;
+    $totalRencanaBelanja = 0;
     foreach ($rabList as $r) {
-        $totalRab += $r['total_rab'];
+        $totalTargetPendapatan += $r['total_pendapatan'] ?? 0;
+        $totalRencanaBelanja += $r['total_belanja'] ?? 0;
     }
 
     $rekap = Transaksi::getRekap($userId, $id);
@@ -31,8 +33,9 @@ if ($action === 'detail') {
     $totalPengeluaran = $rekap['pengeluaran'];
     $saldo = $totalPemasukan - $totalPengeluaran;
 
-    $sisaAnggaran = $totalRab - $totalPengeluaran;
-    $persentaseRealisasi = $totalRab > 0 ? ($totalPengeluaran / $totalRab) * 100 : 0;
+    // Persentase serapan/realisasi terhadap rencana
+    $persentasePendapatan = $totalTargetPendapatan > 0 ? ($totalPemasukan / $totalTargetPendapatan) * 100 : 0;
+    $persentaseBelanja = $totalRencanaBelanja > 0 ? ($totalPengeluaran / $totalRencanaBelanja) * 100 : 0;
 
     $catatanList = CatatanKegiatan::getAll($userId, $id);
 

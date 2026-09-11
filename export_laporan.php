@@ -17,9 +17,11 @@ if (!$kegiatan) {
 }
 
 $rabList = Rab::getAll($userId, $id);
-$totalRab = 0;
+$totalTargetPendapatan = 0;
+$totalRencanaBelanja = 0;
 foreach ($rabList as $r) {
-    $totalRab += $r['total_rab'];
+    $totalTargetPendapatan += $r['total_pendapatan'] ?? 0;
+    $totalRencanaBelanja += $r['total_belanja'] ?? 0;
 }
 
 $rekap = Transaksi::getRekap($userId, $id);
@@ -27,8 +29,8 @@ $totalPemasukan = $rekap['pemasukan'];
 $totalPengeluaran = $rekap['pengeluaran'];
 $saldo = $totalPemasukan - $totalPengeluaran;
 
-$sisaAnggaran = $totalRab - $totalPengeluaran;
-$persentaseRealisasi = $totalRab > 0 ? ($totalPengeluaran / $totalRab) * 100 : 0;
+$persentasePendapatan = $totalTargetPendapatan > 0 ? ($totalPemasukan / $totalTargetPendapatan) * 100 : 0;
+$persentaseBelanja = $totalRencanaBelanja > 0 ? ($totalPengeluaran / $totalRencanaBelanja) * 100 : 0;
 
 $catatanList = CatatanKegiatan::getAll($userId, $id);
 
@@ -67,16 +69,32 @@ if ($kegiatan['catatan']) {
 }
 
 // Keuangan
-$section->addText('C. Rekapitulasi RAB & Realisasi', $subHeaderStyle);
+$section->addText('C. Rekapitulasi RAPB & Realisasi', $subHeaderStyle);
 $phpWord->addTableStyle('Keuangan Table', $tableStyle);
 $tableK = $section->addTable('Keuangan Table');
-$tableK->addRow(); $tableK->addCell(5000)->addText('Komponen', $boldStyle); $tableK->addCell(4000)->addText('Nominal', $boldStyle);
-$tableK->addRow(); $tableK->addCell(5000)->addText('Total Rencana Anggaran Biaya (RAB)'); $tableK->addCell(4000)->addText(formatRupiah($totalRab));
-$tableK->addRow(); $tableK->addCell(5000)->addText('Total Pemasukan (Dana Tersedia)'); $tableK->addCell(4000)->addText(formatRupiah($totalPemasukan));
-$tableK->addRow(); $tableK->addCell(5000)->addText('Total Pengeluaran (Realisasi)'); $tableK->addCell(4000)->addText(formatRupiah($totalPengeluaran));
-$tableK->addRow(); $tableK->addCell(5000)->addText('Saldo Akhir', $boldStyle); $tableK->addCell(4000)->addText(formatRupiah($saldo), $boldStyle);
-$tableK->addRow(); $tableK->addCell(5000)->addText('Sisa Anggaran dari RAB'); $tableK->addCell(4000)->addText(formatRupiah($sisaAnggaran));
-$tableK->addRow(); $tableK->addCell(5000)->addText('Persentase Realisasi terhadap RAB'); $tableK->addCell(4000)->addText(number_format($persentaseRealisasi, 2, ',', '.') . '%');
+$tableK->addRow(); 
+$tableK->addCell(3000)->addText('Komponen', $boldStyle); 
+$tableK->addCell(2000)->addText('RAPB (Rencana)', $boldStyle, ['align' => 'right']);
+$tableK->addCell(2000)->addText('Realisasi', $boldStyle, ['align' => 'right']);
+$tableK->addCell(2000)->addText('Capaian', $boldStyle, ['align' => 'right']);
+
+$tableK->addRow(); 
+$tableK->addCell(3000)->addText('Pendapatan'); 
+$tableK->addCell(2000)->addText(formatRupiah($totalTargetPendapatan), null, ['align' => 'right']);
+$tableK->addCell(2000)->addText(formatRupiah($totalPemasukan), null, ['align' => 'right']);
+$tableK->addCell(2000)->addText(number_format($persentasePendapatan, 2, ',', '.') . '%', null, ['align' => 'right']);
+
+$tableK->addRow(); 
+$tableK->addCell(3000)->addText('Belanja / Pengeluaran'); 
+$tableK->addCell(2000)->addText(formatRupiah($totalRencanaBelanja), null, ['align' => 'right']);
+$tableK->addCell(2000)->addText(formatRupiah($totalPengeluaran), null, ['align' => 'right']);
+$tableK->addCell(2000)->addText(number_format($persentaseBelanja, 2, ',', '.') . '%', null, ['align' => 'right']);
+
+$tableK->addRow(); 
+$tableK->addCell(3000)->addText('Surplus / Defisit', $boldStyle); 
+$tableK->addCell(2000)->addText(formatRupiah($totalTargetPendapatan - $totalRencanaBelanja), $boldStyle, ['align' => 'right']);
+$tableK->addCell(2000)->addText(formatRupiah($totalPemasukan - $totalPengeluaran), $boldStyle, ['align' => 'right']);
+$tableK->addCell(2000)->addText('');
 
 // Catatan
 $section->addText('D. Catatan Kegiatan Penting', $subHeaderStyle);

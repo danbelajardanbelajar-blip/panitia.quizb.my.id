@@ -47,31 +47,47 @@
             </div>
 
             <div class="mb-4" style="page-break-inside: avoid;">
-                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--text-main);"><span style="background: var(--primary); color: white; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.9rem;">C</span> Rekapitulasi Anggaran & Realisasi</h5>
+                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--text-main);"><span style="background: var(--primary); color: white; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.9rem;">C</span> Rekapitulasi Anggaran & Realisasi (RAPB)</h5>
                 <div class="ms-4">
                     <table class="table-modern" style="border: 1px solid var(--border);">
                         <thead>
                             <tr style="background: var(--background);">
                                 <th style="padding: 12px 16px; font-size: 0.85rem;">Komponen</th>
-                                <th class="text-end" style="padding: 12px 16px; font-size: 0.85rem;">Nominal</th>
+                                <th class="text-end" style="padding: 12px 16px; font-size: 0.85rem;">RAPB (Rencana)</th>
+                                <th class="text-end" style="padding: 12px 16px; font-size: 0.85rem;">Realisasi</th>
+                                <th class="text-end" style="padding: 12px 16px; font-size: 0.85rem;">Capaian</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td style="padding: 12px 16px; font-size: 0.95rem;">Total Rencana Anggaran Biaya (RAB)</td><td class="text-end fw-bold font-monospace" style="padding: 12px 16px; font-size: 0.95rem;"><?= formatRupiah($totalRab) ?></td></tr>
-                            <tr><td style="padding: 12px 16px; font-size: 0.95rem;">Total Pemasukan (Dana Tersedia)</td><td class="text-end fw-bold font-monospace" style="padding: 12px 16px; font-size: 0.95rem; color: #16a34a;"><?= formatRupiah($totalPemasukan) ?></td></tr>
-                            <tr><td style="padding: 12px 16px; font-size: 0.95rem;">Total Pengeluaran (Realisasi)</td><td class="text-end fw-bold font-monospace" style="padding: 12px 16px; font-size: 0.95rem; color: #dc2626;"><?= formatRupiah($totalPengeluaran) ?></td></tr>
-                            <tr style="background: var(--background);"><td style="padding: 12px 16px; font-size: 0.95rem;"><strong>Saldo Kas Akhir</strong></td><td class="text-end fw-bold font-monospace" style="padding: 12px 16px; font-size: 1.1rem; color: var(--primary);"><?= formatRupiah($saldo) ?></td></tr>
+                            <tr>
+                                <td style="padding: 12px 16px; font-size: 0.95rem;">Pendapatan</td>
+                                <td class="text-end font-monospace" style="padding: 12px 16px; font-size: 0.95rem; color: #16a34a;"><?= formatRupiah($totalTargetPendapatan) ?></td>
+                                <td class="text-end font-monospace" style="padding: 12px 16px; font-size: 0.95rem; color: #16a34a;"><?= formatRupiah($totalPemasukan) ?></td>
+                                <td class="text-end font-monospace" style="padding: 12px 16px; font-size: 0.95rem;"><?= number_format($persentasePendapatan, 2, ',', '.') ?>%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; font-size: 0.95rem;">Belanja / Pengeluaran</td>
+                                <td class="text-end font-monospace" style="padding: 12px 16px; font-size: 0.95rem; color: #dc2626;"><?= formatRupiah($totalRencanaBelanja) ?></td>
+                                <td class="text-end font-monospace" style="padding: 12px 16px; font-size: 0.95rem; color: #dc2626;"><?= formatRupiah($totalPengeluaran) ?></td>
+                                <td class="text-end font-monospace" style="padding: 12px 16px; font-size: 0.95rem;"><?= number_format($persentaseBelanja, 2, ',', '.') ?>%</td>
+                            </tr>
+                            <tr style="background: var(--background);">
+                                <td style="padding: 12px 16px; font-size: 0.95rem;"><strong>Surplus / Defisit</strong></td>
+                                <td class="text-end fw-bold font-monospace" style="padding: 12px 16px; font-size: 1.1rem; color: var(--primary);"><?= formatRupiah($totalTargetPendapatan - $totalRencanaBelanja) ?></td>
+                                <td class="text-end fw-bold font-monospace" style="padding: 12px 16px; font-size: 1.1rem; color: var(--primary);"><?= formatRupiah($totalPemasukan - $totalPengeluaran) ?></td>
+                                <td class="text-end"></td>
+                            </tr>
                         </tbody>
                     </table>
                     
                     <div class="d-flex gap-3 mt-3">
                         <div style="flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px;">
-                            <span class="d-block text-muted-modern" style="font-size: 0.8rem; margin-bottom: 4px;">Sisa Anggaran (RAB - Pengeluaran)</span>
-                            <strong class="font-monospace" style="font-size: 1.05rem;"><?= formatRupiah($sisaAnggaran) ?></strong>
+                            <span class="d-block text-muted-modern" style="font-size: 0.8rem; margin-bottom: 4px;">Sisa / Hemat Belanja (Rencana - Realisasi)</span>
+                            <strong class="font-monospace" style="font-size: 1.05rem;"><?= formatRupiah($totalRencanaBelanja - $totalPengeluaran) ?></strong>
                         </div>
-                        <div style="flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px;">
-                            <span class="d-block text-muted-modern" style="font-size: 0.8rem; margin-bottom: 4px;">Persentase Realisasi Dana</span>
-                            <strong class="font-monospace" style="font-size: 1.05rem;"><?= number_format($persentaseRealisasi, 2, ',', '.') ?>%</strong>
+                        <div style="flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: <?= ($saldo >= 0) ? 'var(--info-bg)' : 'var(--warning-bg)' ?>;">
+                            <span class="d-block text-muted-modern" style="font-size: 0.8rem; margin-bottom: 4px; color: var(--text-main) !important;">Saldo Kas Saat Ini</span>
+                            <strong class="font-monospace" style="font-size: 1.05rem; color: var(--text-main);"><?= formatRupiah($saldo) ?></strong>
                         </div>
                     </div>
                 </div>

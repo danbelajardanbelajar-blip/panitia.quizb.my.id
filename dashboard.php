@@ -23,7 +23,7 @@ $totalRabQuery = $pdo->prepare("
     FROM rab_items ri
     JOIN rab r ON ri.rab_id = r.id
     JOIN kegiatan k ON r.kegiatan_id = k.id
-    WHERE k.user_id = ?
+    WHERE k.user_id = ? AND ri.jenis = 'pengeluaran'
 ");
 $totalRabQuery->execute([$userId]);
 $totalRab = $totalRabQuery->fetchColumn();
