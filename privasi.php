@@ -32,44 +32,46 @@ if ($isLoggedIn) {
 
 <div class="<?= $isLoggedIn ? 'container-fluid py-2' : '' ?>" style="max-width: 800px; margin: 0 auto;">
     <div class="card-modern <?= $isLoggedIn ? 'border-0 shadow-sm' : '' ?>">
-        <div class="text-center mb-5">
-            <div style="background: var(--primary, #4f46e5); width: 80px; height: 80px; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
-                <i data-lucide="shield-check" style="color: white; width: 40px; height: 40px;"></i>
+        <div class="<?= $isLoggedIn ? 'card-body-modern' : '' ?>">
+            <div class="text-center mb-5">
+                <div style="background: var(--primary, #4f46e5); width: 80px; height: 80px; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                    <i data-lucide="shield-check" style="color: white; width: 40px; height: 40px;"></i>
+                </div>
+                <h2 class="fw-bold mb-2">Kebijakan Privasi</h2>
+                <p class="text-muted" style="font-size: 1.1rem;">Terakhir Diperbarui: 11 September 2026</p>
             </div>
-            <h2 class="fw-bold mb-2">Kebijakan Privasi</h2>
-            <p class="text-muted" style="font-size: 1.1rem;">Terakhir Diperbarui: 11 September 2026</p>
-        </div>
 
-        <div class="privacy-content">
-            <p>Sistem Administrasi Panitia ("Kami") berkomitmen untuk melindungi privasi dan keamanan data pengguna ("Anda"). Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda saat menggunakan layanan kami.</p>
+            <div class="privacy-content">
+                <p>Sistem Administrasi Panitia ("Kami") berkomitmen untuk melindungi privasi dan keamanan data pengguna ("Anda"). Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi informasi pribadi Anda saat menggunakan layanan kami.</p>
 
-            <h5>1. Informasi yang Kami Kumpulkan</h5>
-            <p>Saat Anda menggunakan layanan kami, khususnya saat mendaftar menggunakan integrasi Google OAuth, kami mengumpulkan informasi dasar berikut:</p>
-            <ul>
-                <li><strong>Data Profil Google:</strong> Nama lengkap dan alamat email.</li>
-                <li><strong>Data Aktivitas:</strong> Data kegiatan, RAPB, transaksi, dan catatan yang Anda masukkan secara sadar ke dalam sistem.</li>
-            </ul>
+                <h5>1. Informasi yang Kami Kumpulkan</h5>
+                <p>Saat Anda menggunakan layanan kami, khususnya saat mendaftar menggunakan integrasi Google OAuth, kami mengumpulkan informasi dasar berikut:</p>
+                <ul>
+                    <li><strong>Data Profil Google:</strong> Nama lengkap dan alamat email.</li>
+                    <li><strong>Data Aktivitas:</strong> Data kegiatan, RAPB, transaksi, dan catatan yang Anda masukkan secara sadar ke dalam sistem.</li>
+                </ul>
 
-            <h5>2. Penggunaan Informasi</h5>
-            <p>Kami menggunakan informasi yang kami kumpulkan semata-mata untuk:</p>
-            <ul>
-                <li>Memfasilitasi akses masuk (login) ke dalam aplikasi.</li>
-                <li>Menyediakan layanan manajemen kepanitiaan sesuai dengan yang Anda butuhkan (seperti mencetak laporan dengan nama Anda).</li>
-                <li>Menjaga keamanan dan mencegah akses yang tidak sah ke akun Anda.</li>
-            </ul>
+                <h5>2. Penggunaan Informasi</h5>
+                <p>Kami menggunakan informasi yang kami kumpulkan semata-mata untuk:</p>
+                <ul>
+                    <li>Memfasilitasi akses masuk (login) ke dalam aplikasi.</li>
+                    <li>Menyediakan layanan manajemen kepanitiaan sesuai dengan yang Anda butuhkan (seperti mencetak laporan dengan nama Anda).</li>
+                    <li>Menjaga keamanan dan mencegah akses yang tidak sah ke akun Anda.</li>
+                </ul>
 
-            <h5>3. Perlindungan Data</h5>
-            <p>Data administrasi kepanitiaan Anda bersifat pribadi dan hanya dapat diakses oleh Anda melalui sesi login yang sah. Kami tidak akan menjual, menyewakan, atau menukar informasi pribadi maupun data acara Anda kepada pihak ketiga untuk tujuan pemasaran apa pun.</p>
+                <h5>3. Perlindungan Data</h5>
+                <p>Data administrasi kepanitiaan Anda bersifat pribadi dan hanya dapat diakses oleh Anda melalui sesi login yang sah. Kami tidak akan menjual, menyewakan, atau menukar informasi pribadi maupun data acara Anda kepada pihak ketiga untuk tujuan pemasaran apa pun.</p>
 
-            <h5>4. Penyimpanan Data</h5>
-            <p>Data Anda disimpan dalam database terenkripsi yang aman. Anda memiliki kendali penuh untuk menghapus data kepanitiaan Anda kapan saja melalui antarmuka aplikasi (seperti menghapus kegiatan atau transaksi).</p>
+                <h5>4. Penyimpanan Data</h5>
+                <p>Data Anda disimpan dalam database terenkripsi yang aman. Anda memiliki kendali penuh untuk menghapus data kepanitiaan Anda kapan saja melalui antarmuka aplikasi (seperti menghapus kegiatan atau transaksi).</p>
 
-            <h5>5. Perubahan Kebijakan</h5>
-            <p>Kami berhak mengubah Kebijakan Privasi ini dari waktu ke waktu. Jika ada perubahan signifikan, kami akan memberitahukan pembaruan tersebut melalui platform kami.</p>
+                <h5>5. Perubahan Kebijakan</h5>
+                <p>Kami berhak mengubah Kebijakan Privasi ini dari waktu ke waktu. Jika ada perubahan signifikan, kami akan memberitahukan pembaruan tersebut melalui platform kami.</p>
 
-            <div class="mt-5 p-4 rounded" style="background-color: #f1f5f9; border-left: 4px solid #4f46e5;">
-                <h6 class="fw-bold mb-2">Pertanyaan lebih lanjut?</h6>
-                <p class="mb-0 text-muted" style="font-size: 0.95rem;">Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi ini, silakan hubungi kami melalui <a href="tentang.php" class="text-decoration-none" style="color: #4f46e5; font-weight: 600;">Halaman Tentang / Kontak</a>.</p>
+                <div class="mt-5 p-4 rounded" style="background-color: #f1f5f9; border-left: 4px solid #4f46e5;">
+                    <h6 class="fw-bold mb-2">Pertanyaan lebih lanjut?</h6>
+                    <p class="mb-0 text-muted" style="font-size: 0.95rem;">Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi ini, silakan hubungi kami melalui <a href="tentang.php" class="text-decoration-none" style="color: #4f46e5; font-weight: 600;">Halaman Tentang / Kontak</a>.</p>
+                </div>
             </div>
         </div>
     </div>
