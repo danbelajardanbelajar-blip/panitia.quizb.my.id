@@ -2,11 +2,11 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-        <h2 class="mb-1" style="font-weight: 800;">Rencana Anggaran Biaya (RAB)</h2>
-        <p class="text-muted-modern mb-0">Kelola dan pantau seluruh anggaran kegiatan Anda.</p>
+        <h2 class="mb-1" style="font-weight: 800;">Rencana Anggaran Pendapatan dan Belanja (RAPB)</h2>
+        <p class="text-muted-modern mb-0">Kelola dan pantau seluruh rencana pendapatan serta pengeluaran kegiatan.</p>
     </div>
     <a href="rab.php?action=create" class="btn-modern btn-primary-modern">
-        <i data-lucide="plus-circle"></i> Buat RAB Baru
+        <i data-lucide="plus-circle"></i> Buat RAPB Baru
     </a>
 </div>
 
@@ -36,24 +36,25 @@
             <thead>
                 <tr>
                     <th style="width: 5%">No</th>
-                    <th style="width: 25%">Informasi RAB</th>
-                    <th style="width: 25%">Kegiatan & Tanggal</th>
-                    <th style="width: 15%">Total Anggaran</th>
+                    <th style="width: 25%">Informasi RAPB</th>
+                    <th style="width: 20%">Kegiatan & Tanggal</th>
+                    <th style="width: 15%">Rencana Pendapatan</th>
+                    <th style="width: 15%">Rencana Belanja</th>
                     <th style="width: 10%">Status</th>
-                    <th style="width: 20%" class="text-end">Aksi</th>
+                    <th style="width: 10%" class="text-end">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($rabList)): ?>
                     <tr>
-                        <td colspan="6" class="text-center py-5">
+                        <td colspan="7" class="text-center py-5">
                             <div style="background: var(--background); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
                                 <i data-lucide="file-spreadsheet" style="color: var(--text-muted); width: 32px; height: 32px;"></i>
                             </div>
-                            <h6 class="fw-semibold">Belum ada RAB</h6>
-                            <p class="text-muted-modern mb-4">Buat Rencana Anggaran Biaya pertama Anda untuk mulai mengelola keuangan kegiatan.</p>
+                            <h6 class="fw-semibold">Belum ada RAPB</h6>
+                            <p class="text-muted-modern mb-4">Buat Rencana Anggaran Pendapatan dan Belanja pertama Anda untuk mulai mengelola keuangan kegiatan.</p>
                             <a href="rab.php?action=create" class="btn-modern btn-primary-modern">
-                                <i data-lucide="plus"></i> Buat RAB
+                                <i data-lucide="plus"></i> Buat RAPB
                             </a>
                         </td>
                     </tr>
@@ -74,7 +75,10 @@
                             </div>
                         </td>
                         <td>
-                            <span class="fw-bold fs-6 text-main"><?= formatRupiah($item['total_rab']) ?></span>
+                            <span class="fw-bold fs-6" style="color: #16a34a;">+ <?= formatRupiah($item['total_pendapatan']) ?></span>
+                        </td>
+                        <td>
+                            <span class="fw-bold fs-6 text-danger">- <?= formatRupiah($item['total_belanja']) ?></span>
                         </td>
                         <td>
                             <?php

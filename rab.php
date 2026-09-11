@@ -91,6 +91,7 @@ if ($action === 'create' || $action === 'edit') {
             $itemId = $_POST['item_id'] ?? null;
             $data = [
                 'rab_id' => $rabId,
+                'jenis' => $_POST['jenis'] ?? 'pengeluaran',
                 'kategori' => $_POST['kategori'],
                 'nama_item' => $_POST['nama_item'],
                 'deskripsi' => $_POST['deskripsi'] ?? null,

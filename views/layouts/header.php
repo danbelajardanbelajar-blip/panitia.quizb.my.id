@@ -458,7 +458,7 @@ if (!function_exists('getCurrentUser')) {
         </li>
         <li class="nav-item">
             <a class="nav-link <?= ($activeMenu ?? '') == 'rab' ? 'active' : '' ?>" href="rab.php">
-                <i data-lucide="calculator"></i> RAB
+                <i data-lucide="calculator"></i> RAPB
             </a>
         </li>
         <li class="nav-item">

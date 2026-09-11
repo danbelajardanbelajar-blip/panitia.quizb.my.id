@@ -19,11 +19,12 @@ class RabItem {
     public static function create($data) {
         $pdo = getDB();
         $stmt = $pdo->prepare("
-            INSERT INTO rab_items (rab_id, kategori, nama_item, deskripsi, volume, satuan, harga_satuan)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO rab_items (rab_id, jenis, kategori, nama_item, deskripsi, volume, satuan, harga_satuan)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             $data['rab_id'],
+            $data['jenis'] ?? 'pengeluaran',
             $data['kategori'],
             $data['nama_item'],
             $data['deskripsi'] ?? null,
@@ -38,10 +39,11 @@ class RabItem {
         $pdo = getDB();
         $stmt = $pdo->prepare("
             UPDATE rab_items 
-            SET kategori = ?, nama_item = ?, deskripsi = ?, volume = ?, satuan = ?, harga_satuan = ?
+            SET jenis = ?, kategori = ?, nama_item = ?, deskripsi = ?, volume = ?, satuan = ?, harga_satuan = ?
             WHERE id = ?
         ");
         $stmt->execute([
+            $data['jenis'] ?? 'pengeluaran',
             $data['kategori'],
             $data['nama_item'],
             $data['deskripsi'] ?? null,

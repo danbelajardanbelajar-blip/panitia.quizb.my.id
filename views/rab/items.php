@@ -25,8 +25,29 @@
         </button>
     </div>
     <div class="card-body-modern p-0">
+        <?php 
+        $pemasukan = [];
+        $pengeluaran = [];
+        $totalPemasukan = 0;
+        $totalPengeluaran = 0;
+        
+        foreach ($items as $it) {
+            if (($it['jenis'] ?? 'pengeluaran') === 'pemasukan') {
+                $pemasukan[] = $it;
+                $totalPemasukan += ($it['volume'] * $it['harga_satuan']);
+            } else {
+                $pengeluaran[] = $it;
+                $totalPengeluaran += ($it['volume'] * $it['harga_satuan']);
+            }
+        }
+        ?>
+
+        <!-- RENCANA PENDAPATAN -->
         <div class="table-responsive-modern">
-            <table class="table-modern table-hover">
+            <div class="px-4 py-3 bg-light border-bottom fw-bold" style="color: #16a34a;">
+                <i data-lucide="arrow-down-left" style="width: 18px; height: 18px;"></i> A. TARGET PENDAPATAN
+            </div>
+            <table class="table-modern table-hover mb-0">
                 <thead>
                     <tr>
                         <th style="width: 5%; text-align: center;">No</th>
@@ -39,26 +60,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
-                    $totalRab = 0;
-                    if (empty($items)): 
-                    ?>
-                        <tr>
-                            <td colspan="7" class="text-center py-5">
-                                <div style="background: var(--background); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
-                                    <i data-lucide="calculator" style="color: var(--text-muted); width: 32px; height: 32px;"></i>
-                                </div>
-                                <h6 class="fw-semibold">RAB Masih Kosong</h6>
-                                <p class="text-muted-modern mb-0">Klik tombol Tambah Item untuk mulai menyusun anggaran.</p>
-                            </td>
-                        </tr>
+                    <?php if(empty($pemasukan)): ?>
+                    <tr><td colspan="7" class="text-center text-muted-modern py-4">Belum ada target pendapatan yang dicatat.</td></tr>
                     <?php else: ?>
-                        <?php foreach ($items as $index => $item): 
-                            $jumlah = $item['volume'] * $item['harga_satuan'];
-                            $totalRab += $jumlah;
-                        ?>
+                        <?php foreach($pemasukan as $idx => $item): $jml = $item['volume'] * $item['harga_satuan']; ?>
                         <tr>
-                            <td class="text-center text-muted-modern fw-semibold"><?= $index + 1 ?></td>
+                            <td class="text-center text-muted-modern fw-semibold"><?= $idx + 1 ?></td>
                             <td><span class="badge-modern badge-gray" style="font-weight: 500; font-size: 0.8rem;"><?= htmlspecialchars($item['kategori']) ?></span></td>
                             <td>
                                 <div class="fw-bold" style="color: var(--text-main); font-size: 0.95rem;"><?= htmlspecialchars($item['nama_item']) ?></div>
@@ -71,20 +78,15 @@
                                 <small class="text-muted-modern"><?= htmlspecialchars($item['satuan']) ?></small>
                             </td>
                             <td class="text-end font-monospace" style="font-size: 0.9rem;"><?= formatRupiah($item['harga_satuan']) ?></td>
-                            <td class="text-end fw-bold font-monospace" style="color: var(--text-main);"><?= formatRupiah($jumlah) ?></td>
+                            <td class="text-end fw-bold font-monospace" style="color: #16a34a;">+<?= formatRupiah($jml) ?></td>
                             <td class="text-end">
                                 <div class="d-flex gap-1 justify-content-end">
-                                    <button type="button" class="btn-ghost-modern d-inline-flex align-items-center justify-content-center border-0 p-1" 
-                                            onclick="editItem(<?= htmlspecialchars(json_encode($item)) ?>)" title="Edit">
-                                        <i data-lucide="pencil" style="width:16px;"></i>
-                                    </button>
-                                    <form action="rab.php?action=items&id=<?= $rab['id'] ?>" method="POST" class="d-inline" onsubmit="return confirm('Hapus item ini dari RAB?');">
+                                    <button type="button" class="btn-ghost-modern d-inline-flex align-items-center justify-content-center border-0 p-1" onclick="editItem(<?= htmlspecialchars(json_encode($item)) ?>)" title="Edit"><i data-lucide="pencil" style="width:16px;"></i></button>
+                                    <form action="rab.php?action=items&id=<?= $rab['id'] ?>" method="POST" class="d-inline" onsubmit="return confirm('Hapus item ini?');">
                                         <?= csrfField() ?>
                                         <input type="hidden" name="item_action" value="delete">
                                         <input type="hidden" name="item_id" value="<?= $item['id'] ?>">
-                                        <button type="submit" class="btn-ghost-modern btn-ghost-danger d-inline-flex align-items-center justify-content-center border-0 p-1" title="Hapus">
-                                            <i data-lucide="trash-2" style="width:16px;"></i>
-                                        </button>
+                                        <button type="submit" class="btn-ghost-modern btn-ghost-danger d-inline-flex align-items-center justify-content-center border-0 p-1" title="Hapus"><i data-lucide="trash-2" style="width:16px;"></i></button>
                                     </form>
                                 </div>
                             </td>
@@ -94,12 +96,83 @@
                 </tbody>
                 <tfoot style="background-color: var(--background);">
                     <tr>
-                        <th colspan="5" class="text-end" style="font-size: 1.1rem; padding: 20px 24px;">TOTAL KESELURUHAN</th>
-                        <th class="text-end fw-bold" style="font-size: 1.25rem; color: var(--primary); padding: 20px 24px;"><?= formatRupiah($totalRab) ?></th>
+                        <th colspan="5" class="text-end" style="font-size: 1.05rem; padding: 12px 24px;">TOTAL PENDAPATAN</th>
+                        <th class="text-end fw-bold" style="font-size: 1.15rem; color: #16a34a; padding: 12px 24px;">+<?= formatRupiah($totalPemasukan) ?></th>
                         <th></th>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+
+        <!-- RENCANA BELANJA -->
+        <div class="table-responsive-modern mt-3 border-top">
+            <div class="px-4 py-3 bg-light border-bottom fw-bold text-danger">
+                <i data-lucide="arrow-up-right" style="width: 18px; height: 18px;"></i> B. RENCANA BELANJA
+            </div>
+            <table class="table-modern table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 5%; text-align: center;">No</th>
+                        <th style="width: 20%;">Kategori</th>
+                        <th style="width: 30%;">Uraian Item</th>
+                        <th style="width: 10%; text-align: center;">Vol</th>
+                        <th style="width: 15%; text-align: right;">Harga Satuan</th>
+                        <th style="width: 15%; text-align: right;">Jumlah</th>
+                        <th style="width: 5%; text-align: right;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if(empty($pengeluaran)): ?>
+                    <tr><td colspan="7" class="text-center text-muted-modern py-4">Belum ada rencana belanja yang dicatat.</td></tr>
+                    <?php else: ?>
+                        <?php foreach($pengeluaran as $idx => $item): $jml = $item['volume'] * $item['harga_satuan']; ?>
+                        <tr>
+                            <td class="text-center text-muted-modern fw-semibold"><?= $idx + 1 ?></td>
+                            <td><span class="badge-modern badge-gray" style="font-weight: 500; font-size: 0.8rem;"><?= htmlspecialchars($item['kategori']) ?></span></td>
+                            <td>
+                                <div class="fw-bold" style="color: var(--text-main); font-size: 0.95rem;"><?= htmlspecialchars($item['nama_item']) ?></div>
+                                <?php if($item['deskripsi']): ?>
+                                    <div class="text-muted-modern mt-1" style="font-size: 0.85rem;"><?= htmlspecialchars($item['deskripsi']) ?></div>
+                                <?php endif; ?>
+                            </td>
+                            <td class="text-center">
+                                <div><?= $item['volume'] ?></div>
+                                <small class="text-muted-modern"><?= htmlspecialchars($item['satuan']) ?></small>
+                            </td>
+                            <td class="text-end font-monospace" style="font-size: 0.9rem;"><?= formatRupiah($item['harga_satuan']) ?></td>
+                            <td class="text-end fw-bold font-monospace text-danger">-<?= formatRupiah($jml) ?></td>
+                            <td class="text-end">
+                                <div class="d-flex gap-1 justify-content-end">
+                                    <button type="button" class="btn-ghost-modern d-inline-flex align-items-center justify-content-center border-0 p-1" onclick="editItem(<?= htmlspecialchars(json_encode($item)) ?>)" title="Edit"><i data-lucide="pencil" style="width:16px;"></i></button>
+                                    <form action="rab.php?action=items&id=<?= $rab['id'] ?>" method="POST" class="d-inline" onsubmit="return confirm('Hapus item ini?');">
+                                        <?= csrfField() ?>
+                                        <input type="hidden" name="item_action" value="delete">
+                                        <input type="hidden" name="item_id" value="<?= $item['id'] ?>">
+                                        <button type="submit" class="btn-ghost-modern btn-ghost-danger d-inline-flex align-items-center justify-content-center border-0 p-1" title="Hapus"><i data-lucide="trash-2" style="width:16px;"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+                <tfoot style="background-color: var(--background);">
+                    <tr>
+                        <th colspan="5" class="text-end" style="font-size: 1.05rem; padding: 12px 24px;">TOTAL BELANJA</th>
+                        <th class="text-end fw-bold text-danger" style="font-size: 1.15rem; padding: 12px 24px;">-<?= formatRupiah($totalPengeluaran) ?></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div class="d-flex justify-content-end p-4 border-top">
+            <div class="d-flex flex-column align-items-end p-3 rounded" style="background: <?= ($totalPemasukan >= $totalPengeluaran) ? 'var(--info-bg)' : 'var(--warning-bg)' ?>; border: 1px solid <?= ($totalPemasukan >= $totalPengeluaran) ? 'var(--info)' : 'var(--warning)' ?>;">
+                <span class="text-muted-modern fw-semibold mb-1">REKAPITULASI RAPB (SURPLUS / DEFISIT)</span>
+                <span class="fw-bold font-monospace" style="font-size: 1.5rem; color: <?= ($totalPemasukan >= $totalPengeluaran) ? 'var(--info)' : 'var(--warning)' ?>;">
+                    <?= formatRupiah($totalPemasukan - $totalPengeluaran) ?>
+                </span>
+            </div>
         </div>
     </div>
 </div>
@@ -113,14 +186,36 @@
             <input type="hidden" name="item_id" id="item_id" value="">
             
             <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 20px 24px;">
-                <h5 class="modal-title fw-bold" id="modalTitle">Tambah Item RAB</h5>
+                <h5 class="modal-title fw-bold" id="modalTitle">Tambah Item RAPB</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" style="box-shadow: none;"></button>
             </div>
             <div class="modal-body" style="padding: 24px;">
+                
+                <div class="mb-4 d-flex gap-3 bg-light p-2 rounded border">
+                    <div class="form-check form-check-inline m-0 flex-fill">
+                        <input class="form-check-input" type="radio" name="jenis" id="jenis_pemasukan" value="pemasukan">
+                        <label class="form-check-label w-100 p-2 text-center rounded fw-bold" for="jenis_pemasukan" style="cursor: pointer;">
+                            <i data-lucide="arrow-down-left" class="text-success"></i> Pendapatan
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline m-0 flex-fill">
+                        <input class="form-check-input" type="radio" name="jenis" id="jenis_pengeluaran" value="pengeluaran" checked>
+                        <label class="form-check-label w-100 p-2 text-center rounded fw-bold" for="jenis_pengeluaran" style="cursor: pointer;">
+                            <i data-lucide="arrow-up-right" class="text-danger"></i> Belanja
+                        </label>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label-modern">Kategori <span class="text-danger">*</span></label>
-                    <input type="text" name="kategori" id="kategori" class="form-control-modern" required list="kategoriList" placeholder="Contoh: Konsumsi">
+                    <input type="text" name="kategori" id="kategori" class="form-control-modern" required list="kategoriList" placeholder="Contoh: Konsumsi atau Sponsor">
                     <datalist id="kategoriList">
+                        <!-- Pemasukan -->
+                        <option value="Sponsor">
+                        <option value="Donatur">
+                        <option value="Tiket/Registrasi">
+                        <option value="Subsidi">
+                        <!-- Pengeluaran -->
                         <option value="Konsumsi">
                         <option value="Kesekretariatan">
                         <option value="Transportasi">
@@ -179,7 +274,8 @@ function calculateTotal() {
 function resetForm() {
     document.getElementById('item_action').value = 'create';
     document.getElementById('item_id').value = '';
-    document.getElementById('modalTitle').innerText = 'Tambah Item RAB';
+    document.getElementById('modalTitle').innerText = 'Tambah Item RAPB';
+    document.getElementById('jenis_pengeluaran').checked = true;
     document.getElementById('kategori').value = '';
     document.getElementById('nama_item').value = '';
     document.getElementById('deskripsi').value = '';
@@ -192,7 +288,13 @@ function resetForm() {
 function editItem(item) {
     document.getElementById('item_action').value = 'edit';
     document.getElementById('item_id').value = item.id;
-    document.getElementById('modalTitle').innerText = 'Edit Item RAB';
+    document.getElementById('modalTitle').innerText = 'Edit Item RAPB';
+    
+    if ((item.jenis || 'pengeluaran') === 'pemasukan') {
+        document.getElementById('jenis_pemasukan').checked = true;
+    } else {
+        document.getElementById('jenis_pengeluaran').checked = true;
+    }
     
     document.getElementById('kategori').value = item.kategori;
     document.getElementById('nama_item').value = item.nama_item;
