@@ -21,6 +21,12 @@ try {
             $pdo->exec($seed);
         }
     }
+    
+    // Auto-Migrate kolom jenis pada rab_items (Upgrade RAB ke RAPB)
+    $checkCol = $pdo->query("SHOW COLUMNS FROM `rab_items` LIKE 'jenis'");
+    if ($checkCol->rowCount() == 0) {
+        $pdo->exec("ALTER TABLE `rab_items` ADD COLUMN `jenis` ENUM('pemasukan', 'pengeluaran') NOT NULL DEFAULT 'pengeluaran' AFTER `rab_id`");
+    }
 } catch (\PDOException $e) {
     die("Koneksi / Inisialisasi Database Gagal. Pastikan kredensial database sudah benar. Error: " . $e->getMessage());
 }

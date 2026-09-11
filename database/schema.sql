@@ -90,6 +90,7 @@ CREATE TABLE `rab` (
 CREATE TABLE `rab_items` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `rab_id` bigint(20) UNSIGNED NOT NULL,
+  `jenis` enum('pemasukan','pengeluaran') NOT NULL DEFAULT 'pengeluaran',
   `kategori` varchar(100) NOT NULL,
   `nama_item` varchar(255) NOT NULL,
   `deskripsi` text DEFAULT NULL,
