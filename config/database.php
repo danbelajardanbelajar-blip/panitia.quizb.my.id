@@ -20,10 +20,33 @@ function getDB() {
 
         try {
             $pdo = new PDO($dsn, $user, $pass, $options);
+            
+            // Cek apakah tabel users sudah ada
+            $check = $pdo->query("SHOW TABLES LIKE 'users'");
+            if ($check->rowCount() == 0) {
+                $schemaPath = __DIR__ . '/../database/schema.sql';
+                if (file_exists($schemaPath)) {
+                    $schema = file_get_contents($schemaPath);
+                    $pdo->exec($schema);
+                }
+                $seedPath = __DIR__ . '/../database/seed.sql';
+                if (file_exists($seedPath)) {
+                    $seed = file_get_contents($seedPath);
+                    $pdo->exec($seed);
+                }
+            }
+
+            // Auto-Migrate kolom jenis pada rab_items (Upgrade RAB ke RAPB)
+            // Lakukan try-catch khusus agar jika gagal tidak mematikan koneksi secara keseluruhan,
+            // atau cukup gunakan SHOW COLUMNS
+            $checkCol = $pdo->query("SHOW COLUMNS FROM `rab_items` LIKE 'jenis'");
+            if ($checkCol->rowCount() == 0) {
+                $pdo->exec("ALTER TABLE `rab_items` ADD COLUMN `jenis` ENUM('pemasukan', 'pengeluaran') NOT NULL DEFAULT 'pengeluaran' AFTER `rab_id`");
+            }
         } catch (\PDOException $e) {
             // In production, do not output the real error message
             error_log($e->getMessage());
-            die("Database connection failed. Please try again later.");
+            die("Database connection failed. Please try again later. " . $e->getMessage());
         }
     }
     
