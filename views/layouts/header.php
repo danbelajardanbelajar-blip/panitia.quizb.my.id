@@ -59,7 +59,6 @@ if (!function_exists('getCurrentUser')) {
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ----- SIDEBAR ----- */
         .sidebar {
             width: var(--sidebar-width);
             height: 100vh;
@@ -71,6 +70,8 @@ if (!function_exists('getCurrentUser')) {
             z-index: 1000;
             overflow-y: auto;
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
         .sidebar-brand {
             display: flex;
@@ -483,6 +484,14 @@ if (!function_exists('getCurrentUser')) {
             </a>
         </li>
     </ul>
+
+    <div class="mt-auto px-3 pb-4 pt-4 text-center" style="font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: auto;">
+        <div class="d-flex justify-content-center gap-3 mb-2">
+            <a href="tentang.php" class="text-decoration-none text-muted-modern fw-semibold">Tentang</a>
+            <a href="privasi.php" class="text-decoration-none text-muted-modern fw-semibold">Privasi</a>
+        </div>
+        <div class="text-muted-modern">&copy; <?= date('Y') ?> Admin Panitia</div>
+    </div>
 </aside>
 
 <div class="main-content">

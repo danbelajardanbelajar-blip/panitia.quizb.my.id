@@ -369,6 +369,12 @@ $authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query([
             <div class="secure-badge">
                 <i data-lucide="shield-check" style="width: 16px;"></i> Akses aman dan terenkripsi
             </div>
+            
+            <div class="mt-4 pt-3 border-top" style="font-size: 0.85rem;">
+                <a href="tentang.php" class="text-decoration-none text-muted mx-2">Tentang</a>
+                &bull;
+                <a href="privasi.php" class="text-decoration-none text-muted mx-2">Kebijakan Privasi</a>
+            </div>
         </div>
     </div>
 
