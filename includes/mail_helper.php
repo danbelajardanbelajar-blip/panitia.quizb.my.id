@@ -2,23 +2,27 @@
 // Mencegah error jika dipanggil berulang kali
 if (class_exists('MailHelper')) return;
 
-// Mencari file PHPMailer
-$possiblePaths = [
-    '/home/quic1934/public_html/vendor/phpmailer/phpmailer/src/',
-    '/home/quic1934/public_html/vendor/phpmailer/src/',
-    dirname(__DIR__, 2) . '/vendor/phpmailer/phpmailer/src/',
-    dirname(__DIR__, 2) . '/vendor/phpmailer/src/',
-    $_SERVER['DOCUMENT_ROOT'] . '/../../vendor/phpmailer/phpmailer/src/',
-    $_SERVER['DOCUMENT_ROOT'] . '/../vendor/phpmailer/phpmailer/src/'
-];
-
-foreach ($possiblePaths as $path) {
-    if (file_exists($path . 'PHPMailer.php')) {
-        require_once $path . 'Exception.php';
-        require_once $path . 'PHPMailer.php';
-        require_once $path . 'SMTP.php';
+// Mencari file PHPMailer secara dinamis dengan naik folder
+$phpMailerFound = false;
+$currentDir = __DIR__;
+for ($i = 0; $i < 6; $i++) {
+    $checkPath1 = $currentDir . '/vendor/phpmailer/phpmailer/src/';
+    $checkPath2 = $currentDir . '/vendor/phpmailer/src/';
+    
+    if (file_exists($checkPath1 . 'PHPMailer.php')) {
+        require_once $checkPath1 . 'Exception.php';
+        require_once $checkPath1 . 'PHPMailer.php';
+        require_once $checkPath1 . 'SMTP.php';
+        $phpMailerFound = true;
+        break;
+    } elseif (file_exists($checkPath2 . 'PHPMailer.php')) {
+        require_once $checkPath2 . 'Exception.php';
+        require_once $checkPath2 . 'PHPMailer.php';
+        require_once $checkPath2 . 'SMTP.php';
+        $phpMailerFound = true;
         break;
     }
+    $currentDir = dirname($currentDir);
 }
 
 use PHPMailer\PHPMailer\PHPMailer;
