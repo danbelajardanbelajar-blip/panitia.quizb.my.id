@@ -46,25 +46,36 @@ if ($action === 'add' && $isOwner) {
                     $stmt = $pdo->prepare("INSERT INTO workspace_members (owner_id, email) VALUES (?, ?)");
                     $stmt->execute([$userId, $email]);
 
-                    // Send Email Notification
+                    // Send Email Notification menggunakan PHPMailer
                     try {
-                        if (function_exists('mail')) {
+                        require_once __DIR__ . '/includes/mail_helper.php';
+                        if (class_exists('MailHelper')) {
                             $ownerName = $_SESSION['user_name'] ?? 'Seseorang';
                             $subject = "Undangan Kolaborasi - Sistem Administrasi Panitia";
                             
-                            $message = "Halo,\n\n";
-                            $message .= "Anda telah diundang oleh {$ownerName} untuk berkolaborasi mengelola kepanitiaan di Sistem Administrasi Panitia.\n\n";
-                            $message .= "Sekarang Anda dapat melihat, menginput, dan mengelola data kegiatan tersebut secara bersama-sama.\n\n";
-                            $message .= "Silakan login menggunakan akun Google Anda melalui tautan berikut:\n";
-                            $message .= "https://panitia.quizb.my.id/\n\n";
-                            $message .= "Setelah login, klik tombol 'Workspace Pribadi' di pojok kanan atas untuk beralih ke Kepanitiaan {$ownerName}.\n\n";
-                            $message .= "Terima kasih,\nTim Admin Panitia";
+                            $messageHTML = "
+                            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;'>
+                                <div style='background-color: #4f46e5; padding: 24px; text-align: center;'>
+                                    <h2 style='color: white; margin: 0;'>Undangan Kolaborasi</h2>
+                                </div>
+                                <div style='padding: 24px; color: #333;'>
+                                    <p>Halo,</p>
+                                    <p>Anda telah diundang oleh <strong>{$ownerName}</strong> untuk berkolaborasi mengelola kepanitiaan di Sistem Administrasi Panitia.</p>
+                                    <p>Sekarang Anda dapat melihat, menginput, dan mengelola data kegiatan secara bersama-sama.</p>
+                                    
+                                    <div style='text-align: center; margin: 30px 0;'>
+                                        <a href='https://panitia.quizb.my.id/' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;'>Login Sekarang</a>
+                                    </div>
+                                    
+                                    <p style='font-size: 14px; color: #666;'>
+                                        <em>Panduan Singkat:</em> Setelah login menggunakan akun Google, klik tombol <strong>'Workspace Pribadi'</strong> di pojok kanan atas, lalu pilih Kepanitiaan {$ownerName}.
+                                    </p>
+                                    <br>
+                                    <p>Terima kasih,<br>Tim Admin Panitia</p>
+                                </div>
+                            </div>";
                             
-                            $headers = "From: noreply@panitia.quizb.my.id\r\n";
-                            $headers .= "Reply-To: noreply@panitia.quizb.my.id\r\n";
-                            $headers .= "X-Mailer: PHP/" . phpversion();
-                            
-                            @mail($email, $subject, $message, $headers);
+                            MailHelper::sendNotification($email, $subject, $messageHTML);
                         }
                     } catch (\Throwable $e) {
                         // Ignore mail error
