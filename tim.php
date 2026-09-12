@@ -47,22 +47,28 @@ if ($action === 'add' && $isOwner) {
                     $stmt->execute([$userId, $email]);
 
                     // Send Email Notification
-                    $ownerName = $_SESSION['user_name'] ?? 'Seseorang';
-                    $subject = "Undangan Kolaborasi - Sistem Administrasi Panitia";
-                    
-                    $message = "Halo,\n\n";
-                    $message .= "Anda telah diundang oleh {$ownerName} untuk berkolaborasi mengelola kepanitiaan di Sistem Administrasi Panitia.\n\n";
-                    $message .= "Sekarang Anda dapat melihat, menginput, dan mengelola data kegiatan tersebut secara bersama-sama.\n\n";
-                    $message .= "Silakan login menggunakan akun Google Anda melalui tautan berikut:\n";
-                    $message .= "https://panitia.quizb.my.id/\n\n";
-                    $message .= "Setelah login, klik tombol 'Workspace Pribadi' di pojok kanan atas untuk beralih ke Kepanitiaan {$ownerName}.\n\n";
-                    $message .= "Terima kasih,\nTim Admin Panitia";
-                    
-                    $headers = "From: noreply@panitia.quizb.my.id\r\n";
-                    $headers .= "Reply-To: noreply@panitia.quizb.my.id\r\n";
-                    $headers .= "X-Mailer: PHP/" . phpversion();
-                    
-                    @mail($email, $subject, $message, $headers);
+                    try {
+                        if (function_exists('mail')) {
+                            $ownerName = $_SESSION['user_name'] ?? 'Seseorang';
+                            $subject = "Undangan Kolaborasi - Sistem Administrasi Panitia";
+                            
+                            $message = "Halo,\n\n";
+                            $message .= "Anda telah diundang oleh {$ownerName} untuk berkolaborasi mengelola kepanitiaan di Sistem Administrasi Panitia.\n\n";
+                            $message .= "Sekarang Anda dapat melihat, menginput, dan mengelola data kegiatan tersebut secara bersama-sama.\n\n";
+                            $message .= "Silakan login menggunakan akun Google Anda melalui tautan berikut:\n";
+                            $message .= "https://panitia.quizb.my.id/\n\n";
+                            $message .= "Setelah login, klik tombol 'Workspace Pribadi' di pojok kanan atas untuk beralih ke Kepanitiaan {$ownerName}.\n\n";
+                            $message .= "Terima kasih,\nTim Admin Panitia";
+                            
+                            $headers = "From: noreply@panitia.quizb.my.id\r\n";
+                            $headers .= "Reply-To: noreply@panitia.quizb.my.id\r\n";
+                            $headers .= "X-Mailer: PHP/" . phpversion();
+                            
+                            @mail($email, $subject, $message, $headers);
+                        }
+                    } catch (\Throwable $e) {
+                        // Ignore mail error
+                    }
                 }
             }
         }
