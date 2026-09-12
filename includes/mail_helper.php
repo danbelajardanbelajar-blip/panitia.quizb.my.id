@@ -32,7 +32,16 @@ class MailHelper {
         }
 
         $mail = new PHPMailer(true);
+        $logFile = __DIR__ . '/../mail_debug.log';
         try {
+            file_put_contents($logFile, "\n=== MENGIRIM EMAIL KE: $toEmail PADA " . date('Y-m-d H:i:s') . " ===\n", FILE_APPEND);
+            
+            // Konfigurasi Debugging
+            $mail->SMTPDebug = 2; // 2 = Server & client messages
+            $mail->Debugoutput = function($str, $level) use ($logFile) {
+                file_put_contents($logFile, "[$level] $str\n", FILE_APPEND);
+            };
+
             $mail->isSMTP();
             $mail->Host       = 'maktabah.quizb.my.id'; 
             $mail->SMTPAuth   = true;
@@ -64,9 +73,12 @@ class MailHelper {
             $mail->Body    = $messageHTML;
 
             $mail->send();
+            file_put_contents($logFile, "STATUS: BERHASIL TERKIRIM\n", FILE_APPEND);
             return true;
         } catch (\Exception $e) {
-            error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            $errorMsg = "STATUS: GAGAL! Error: {$mail->ErrorInfo} | Exception: " . $e->getMessage() . "\n";
+            file_put_contents($logFile, $errorMsg, FILE_APPEND);
+            error_log($errorMsg);
             return false;
         }
     }
