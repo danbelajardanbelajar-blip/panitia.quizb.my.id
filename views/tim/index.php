@@ -4,6 +4,24 @@
     <h2 class="fw-bold m-0">Kolaborasi Tim</h2>
 </div>
 
+<?php if (isset($_SESSION['flash_success'])): ?>
+    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        <i data-lucide="check-circle" class="me-2" style="width: 18px; margin-top: -2px;"></i>
+        <?= htmlspecialchars($_SESSION['flash_success']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['flash_success']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['flash_error'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+        <i data-lucide="alert-circle" class="me-2" style="width: 18px; margin-top: -2px;"></i>
+        <?= htmlspecialchars($_SESSION['flash_error']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['flash_error']); ?>
+<?php endif; ?>
+
 <?php if (!$isOwner): ?>
 <div class="alert alert-warning badge-warning text-dark border-0 rounded-3 mb-4">
     <i data-lucide="info" class="me-2" style="width: 18px; margin-top: -2px;"></i>

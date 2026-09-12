@@ -75,13 +75,26 @@ if ($action === 'add' && $isOwner) {
                                 </div>
                             </div>";
                             
-                            MailHelper::sendNotification($email, $subject, $messageHTML);
+                            $mailSent = MailHelper::sendNotification($email, $subject, $messageHTML);
+                            if ($mailSent) {
+                                $_SESSION['flash_success'] = "Anggota berhasil ditambahkan dan Email undangan telah dikirim ke $email.";
+                            } else {
+                                $_SESSION['flash_success'] = "Anggota berhasil ditambahkan, tetapi email gagal terkirim (cek mail_debug.log).";
+                            }
+                        } else {
+                            $_SESSION['flash_success'] = "Anggota ditambahkan. (Email gagal: PHPMailer tidak ditemukan).";
                         }
                     } catch (\Throwable $e) {
-                        // Ignore mail error
+                        $_SESSION['flash_success'] = "Anggota berhasil ditambahkan (Error pengiriman email).";
                     }
+                } else {
+                    $_SESSION['flash_error'] = "Gagal: Email $email sudah terdaftar di kepanitiaan ini.";
                 }
+            } else {
+                $_SESSION['flash_error'] = "Gagal: Anda tidak bisa menambahkan alamat email Anda sendiri.";
             }
+        } else {
+            $_SESSION['flash_error'] = "Format email tidak valid.";
         }
         header('Location: tim.php');
         exit;
@@ -95,6 +108,7 @@ if ($action === 'add' && $isOwner) {
         if ($memberId) {
             $stmt = $pdo->prepare("DELETE FROM workspace_members WHERE id = ? AND owner_id = ?");
             $stmt->execute([$memberId, $userId]);
+            $_SESSION['flash_success'] = "Akses anggota berhasil dihapus.";
         }
         header('Location: tim.php');
         exit;
