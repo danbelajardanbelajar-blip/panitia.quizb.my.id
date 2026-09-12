@@ -26,16 +26,18 @@ use PHPMailer\PHPMailer\Exception;
 
 class MailHelper {
     public static function sendNotification($toEmail, $subject, $messageHTML) {
+        $logFile = __DIR__ . '/../mail_debug.log';
+        file_put_contents($logFile, "\n=== MENGIRIM EMAIL KE: $toEmail PADA " . date('Y-m-d H:i:s') . " ===\n", FILE_APPEND);
+        
         if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+            $msg = "STATUS: GAGAL! Class PHPMailer tidak ditemukan di path yang ditentukan.\n";
+            file_put_contents($logFile, $msg, FILE_APPEND);
             error_log('PHPMailer class not found.');
             return false;
         }
 
         $mail = new PHPMailer(true);
-        $logFile = __DIR__ . '/../mail_debug.log';
         try {
-            file_put_contents($logFile, "\n=== MENGIRIM EMAIL KE: $toEmail PADA " . date('Y-m-d H:i:s') . " ===\n", FILE_APPEND);
-            
             // Konfigurasi Debugging
             $mail->SMTPDebug = 2; // 2 = Server & client messages
             $mail->Debugoutput = function($str, $level) use ($logFile) {
