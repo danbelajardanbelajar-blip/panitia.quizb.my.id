@@ -15,6 +15,10 @@ function requireLogin() {
 }
 
 function getCurrentUserId() {
+    return $_SESSION['active_workspace_id'] ?? ($_SESSION['user_id'] ?? null);
+}
+
+function getOriginalUserId() {
     return $_SESSION['user_id'] ?? null;
 }
 

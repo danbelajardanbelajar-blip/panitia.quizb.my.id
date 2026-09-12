@@ -3,6 +3,31 @@
 if (!function_exists('getCurrentUser')) {
     function getCurrentUser() { return ['name' => 'User', 'email' => '', 'avatar' => null]; }
 }
+
+$availableWorkspaces = [];
+$activeWorkspaceId = null;
+$realUserId = null;
+
+if (function_exists('isLoggedIn') && isLoggedIn()) {
+    $realUserId = getOriginalUserId();
+    $realUserEmail = $_SESSION['user_email'] ?? '';
+    
+    try {
+        $pdoHeader = getDB();
+        $stmtH = $pdoHeader->prepare("
+            SELECT w.owner_id, u.name as owner_name, u.email as owner_email 
+            FROM workspace_members w 
+            JOIN users u ON w.owner_id = u.id 
+            WHERE w.email = ?
+        ");
+        $stmtH->execute([$realUserEmail]);
+        $availableWorkspaces = $stmtH->fetchAll();
+    } catch (Exception $e) {
+        // Ignore if table doesn't exist yet
+    }
+    
+    $activeWorkspaceId = $_SESSION['active_workspace_id'] ?? $realUserId;
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -481,6 +506,11 @@ if (!function_exists('getCurrentUser')) {
                 <i data-lucide="file-text"></i> Laporan
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link <?= ($activeMenu ?? '') == 'tim' ? 'active' : '' ?>" href="tim.php">
+                <i data-lucide="users"></i> Kolaborasi Tim
+            </a>
+        </li>
         
         <li class="nav-item mt-4">
             <a class="nav-link text-danger" href="logout.php">
@@ -507,16 +537,43 @@ if (!function_exists('getCurrentUser')) {
             <h1 class="page-header-title d-none d-sm-block"><?= htmlspecialchars($title ?? 'Sistem Administrasi Panitia') ?></h1>
         </div>
 
-        <div class="dropdown">
-            <button class="user-profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="<?= htmlspecialchars(getCurrentUser()['avatar'] ?? 'https://ui-avatars.com/api/?name='.urlencode(getCurrentUser()['name'] ?? 'User')) ?>" alt="Avatar">
-                <span class="d-none d-md-inline"><?= htmlspecialchars(getCurrentUser()['name'] ?? 'Pengguna') ?></span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 12px; margin-top: 10px; padding: 10px;">
-                <li><h6 class="dropdown-header text-truncate" style="max-width: 200px;"><?= htmlspecialchars(getCurrentUser()['email'] ?? '') ?></h6></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger d-flex align-items-center gap-2 rounded" href="logout.php"><i data-lucide="log-out" style="width:16px;"></i> Keluar</a></li>
-            </ul>
+        <div class="d-flex align-items-center gap-3">
+            <?php if (!empty($availableWorkspaces)): ?>
+            <div class="dropdown">
+                <button class="btn-modern btn-secondary-modern dropdown-toggle py-1 px-3 rounded-pill" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.85rem;">
+                    <i data-lucide="briefcase" style="width: 14px; margin-right: 4px;"></i>
+                    <?= $activeWorkspaceId == $realUserId ? 'Workspace Pribadi' : 'Workspace Orang Lain' ?>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 12px; margin-top: 10px;">
+                    <li><h6 class="dropdown-header">Beralih Workspace</h6></li>
+                    <li>
+                        <a class="dropdown-item <?= $activeWorkspaceId == $realUserId ? 'active' : '' ?>" href="tim.php?action=switch&id=<?= $realUserId ?>">
+                            Workspace Pribadi
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <?php foreach ($availableWorkspaces as $ws): ?>
+                        <li>
+                            <a class="dropdown-item <?= $activeWorkspaceId == $ws['owner_id'] ? 'active' : '' ?>" href="tim.php?action=switch&id=<?= $ws['owner_id'] ?>">
+                                Kepanitiaan <?= htmlspecialchars($ws['owner_name']) ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+
+            <div class="dropdown">
+                <button class="user-profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="<?= htmlspecialchars(getCurrentUser()['avatar'] ?? 'https://ui-avatars.com/api/?name='.urlencode(getCurrentUser()['name'] ?? 'User')) ?>" alt="Avatar">
+                    <span class="d-none d-md-inline"><?= htmlspecialchars(getCurrentUser()['name'] ?? 'Pengguna') ?></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 12px; margin-top: 10px; padding: 10px;">
+                    <li><h6 class="dropdown-header text-truncate" style="max-width: 200px;"><?= htmlspecialchars(getCurrentUser()['email'] ?? '') ?></h6></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger d-flex align-items-center gap-2 rounded" href="logout.php"><i data-lucide="log-out" style="width:16px;"></i> Keluar</a></li>
+                </ul>
+            </div>
         </div>
     </header>
 

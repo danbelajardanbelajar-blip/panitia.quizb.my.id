@@ -43,6 +43,17 @@ function getDB() {
             if ($checkCol->rowCount() == 0) {
                 $pdo->exec("ALTER TABLE `rab_items` ADD COLUMN `jenis` ENUM('pemasukan', 'pengeluaran') NOT NULL DEFAULT 'pengeluaran' AFTER `rab_id`");
             }
+            // Create workspace_members table for collaboration feature
+            $checkWorkspace = $pdo->query("SHOW TABLES LIKE 'workspace_members'");
+            if ($checkWorkspace->rowCount() == 0) {
+                $pdo->exec("CREATE TABLE workspace_members (
+                    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+                    owner_id BIGINT UNSIGNED NOT NULL, 
+                    email VARCHAR(255) NOT NULL, 
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+                    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+                )");
+            }
         } catch (\PDOException $e) {
             // In production, do not output the real error message
             error_log($e->getMessage());

@@ -5,7 +5,9 @@ class Rab {
     public static function getAll($userId, $kegiatanId = null) {
         $pdo = getDB();
         $query = "SELECT r.*, k.nama_kegiatan, 
-                 (SELECT COALESCE(SUM(volume * harga_satuan), 0) FROM rab_items WHERE rab_id = r.id) as total_rab 
+                 (SELECT COALESCE(SUM(volume * harga_satuan), 0) FROM rab_items WHERE rab_id = r.id AND jenis = 'pengeluaran') as total_belanja,
+                 (SELECT COALESCE(SUM(volume * harga_satuan), 0) FROM rab_items WHERE rab_id = r.id AND jenis = 'pemasukan') as total_pendapatan,
+                 (SELECT COALESCE(SUM(volume * harga_satuan), 0) FROM rab_items WHERE rab_id = r.id AND jenis = 'pengeluaran') as total_rab 
                  FROM rab r 
                  JOIN kegiatan k ON r.kegiatan_id = k.id 
                  WHERE k.user_id = ?";
